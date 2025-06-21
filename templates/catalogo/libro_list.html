@@ -1,0 +1,534 @@
+{% block title %}BiblioTech - Catálogo de Libros{% endblock %}
+{% block extra_css %}
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    'inter': ['Inter', 'sans-serif'],
+                },
+                colors: {
+                    primary: {
+                        50: '#f0f9ff',
+                        100: '#e0f2fe',
+                        500: '#06b6d4',
+                        600: '#0891b2',
+                        700: '#0e7490',
+                        900: '#164e63',
+                    }
+                },
+                animation: {
+                    'fade-in': 'fadeIn 1s ease-out',
+                    'slide-up': 'slideUp 0.8s ease-out',
+                    'slide-down': 'slideDown 0.6s ease-out',
+                    'float': 'float 8s ease-in-out infinite',
+                    'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+                    'glow': 'glow 2s ease-in-out infinite alternate',
+                    'bounce-soft': 'bounceSoft 2s ease-in-out infinite',
+                    'rotate-slow': 'rotateSlow 20s linear infinite',
+                    'card-in': 'cardIn 0.6s ease-out forwards',
+                },
+            }
+        }
+    }
+</script>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(60px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        25% { transform: translateY(-20px) rotate(5deg); }
+        50% { transform: translateY(-10px) rotate(0deg); }
+        75% { transform: translateY(-15px) rotate(-5deg); }
+    }
+    
+    @keyframes pulseSoft {
+        0%, 100% { opacity: 0.8; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+    }
+    
+    @keyframes glow {
+        from { box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
+        to { box-shadow: 0 0 40px rgba(6, 182, 212, 0.6); }
+    }
+    
+    @keyframes bounceSoft {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes rotateSlow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    @keyframes cardIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    
+    .glass-morphism {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .glass-dark {
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .gradient-text {
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .hero-gradient {
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 25%, #2d1b69 50%, #1e3a8a 75%, #0369a1 100%);
+    }
+    
+    .mesh-gradient {
+        background: radial-gradient(circle at 20% 50%, rgba(6, 182, 212, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 90% 90%, rgba(34, 197, 94, 0.2) 0%, transparent 50%);
+    }
+    
+    .card-hover {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .card-hover:hover {
+        transform: translateY(-12px) scale(1.02);
+    }
+    
+    .book-card {
+        opacity: 0;
+        animation: cardIn 0.6s ease-out forwards;
+    }
+    
+    .floating-shapes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+    }
+    
+    .shape {
+        position: absolute;
+        opacity: 0.1;
+    }
+    
+    .shape-1 {
+        top: 10%;
+        left: 10%;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(45deg, #06b6d4, #3b82f6);
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        animation: float 12s ease-in-out infinite;
+    }
+    
+    .shape-2 {
+        top: 60%;
+        right: 10%;
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(45deg, #8b5cf6, #ec4899);
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        animation: float 15s ease-in-out infinite reverse;
+    }
+    
+    .shape-3 {
+        bottom: 20%;
+        left: 20%;
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(45deg, #22c55e, #06b6d4);
+        border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%;
+        animation: float 10s ease-in-out infinite;
+        animation-delay: -5s;
+    }
+    
+    .search-input:focus {
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        border-color: #06b6d4;
+    }
+    
+    .genre-badge {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .genre-badge:hover {
+        transform: scale(1.05) rotate(-1deg);
+        box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #312e81 50%, #1e3a8a 75%, #0369a1 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Navigation -->
+<body class="font-inter bg-gradient-to-br from-slate-900 via-gray-900 to-indigo-900 min-h-screen overflow-x-hidden"></body>
+    <nav class="fixed top-0 w-full z-50 glass-dark backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-4 animate-slide-down">
+                    <div class="relative">
+                        <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-2xl rotate-3 hover:rotate-0 transition-transform duration-300 animate-glow">
+                            <i class="bi bi-book-half text-white text-xl"></i>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-cyan-400 rounded-full animate-pulse-soft"></div>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black text-white tracking-tight">BiblioTech</span>
+                        <div class="text-xs text-cyan-400 font-medium tracking-wider">Biblioteca Virtual</div>
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'index' %}" class="group flex items-center space-x-2 text-gray-300 hover:text-cyan-400 transition duration-300 font-medium relative">
+                        <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center group-hover:bg-cyan-400/20 transition duration-300">
+                            <i class="bi bi-house-door text-sm"></i>
+                        </div>
+                        <span>Inicio</span>
+                        <div class="absolute -bottom-1 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:w-full transition-all duration-300"></div>
+                    </a>
+                    <a href="{% url 'libros' %}" class="group flex items-center space-x-2 text-gray-300 hover:text-cyan-400 transition duration-300 font-medium relative">
+                        <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center group-hover:bg-cyan-400/20 transition duration-300">
+                            <i class="bi bi-journal-bookmark text-sm"></i>
+                        </div>
+                        <span>Libros</span>
+                        <div class="absolute -bottom-1 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:w-full transition-all duration-300"></div>
+                    </a>
+                    <a href="#" class="group flex items-center space-x-2 text-gray-300 hover:text-cyan-400 transition duration-300 font-medium relative">
+                        <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center group-hover:bg-cyan-400/20 transition duration-300">
+                            <i class="bi bi-people text-sm"></i>
+                        </div>
+                        <span>Autores</span>
+                        <div class="absolute -bottom-1 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:w-full transition-all duration-300"></div>
+                    </a>
+                    <a href="#" class="group flex items-center space-x-2 text-gray-300 hover:text-cyan-400 transition duration-300 font-medium relative">
+                        <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center group-hover:bg-cyan-400/20 transition duration-300">
+                            <i class="bi bi-search text-sm"></i>
+                        </div>
+                        <span>Buscar</span>
+                        <div class="absolute -bottom-1 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:w-full transition-all duration-300"></div>
+                    </a>
+                </div>            
+            </div>
+        </div>
+    </nav>
+<!-- Hero Section -->
+<section class="relative pt-20 pb-16 overflow-hidden hero-gradient">
+    <!-- Floating Shapes -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    
+    <!-- Mesh Gradient Overlay -->
+    <div class="absolute inset-0 mesh-gradient"></div>
+    
+    <!-- Content -->
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+        <div class="text-center">
+            <!-- Main Heading -->
+            <div class="animate-fade-in" style="animation-delay: 0.4s;">
+                <h1 class="text-4xl md:text-6xl font-black text-white mb-4 leading-none tracking-tight">
+                    Catálogo de <span class="gradient-text">Libros</span>
+                </h1>
+            </div>
+            
+            <!-- Subtitle -->
+            <div class="animate-fade-in" style="animation-delay: 0.6s;">
+                <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed font-light">
+                    Explora nuestra colección completa de libros disponibles en la biblioteca virtual más avanzada.
+                </p>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="animate-fade-in max-w-2xl mx-auto" style="animation-delay: 0.8s;">
+                <form method="get" class="relative">
+                    <div class="flex items-center glass-morphism rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+                        <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-blue-500/20">
+                            <i class="bi bi-search text-cyan-400 text-xl"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            name="q" 
+                            class="flex-1 h-16 px-6 bg-transparent border-none outline-none text-white placeholder-gray-400 text-lg search-input"
+                            placeholder="Buscar por título, autor, género..."
+                            value="{{ request.GET.q }}"
+                        >
+                        <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 h-16 font-semibold hover:from-cyan-600 hover:to-blue-700 transition duration-300 flex items-center space-x-2">
+                            <i class="bi bi-search"></i>
+                            <span class="hidden sm:inline">Buscar</span>
+                        </button>
+                    </div>
+                    {% if request.GET.q %}
+                    <div class="mt-4 text-center">
+                        <div class="inline-flex items-center glass-morphism rounded-xl px-4 py-2 border border-white/20">
+                            <i class="bi bi-info-circle text-cyan-400 mr-2"></i>
+                            <span class="text-gray-300 text-sm">Resultados para: </span>
+                            <strong class="text-white ml-1">"{{ request.GET.q }}"</strong>
+                            <a href="{% url 'libros' %}" class="ml-3 text-cyan-400 hover:text-cyan-300 transition duration-300">
+                                <i class="bi bi-x-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Decorative Elements -->
+    <div class="absolute top-1/4 left-12 w-24 h-24 bg-gradient-to-br from-cyan-400/30 to-blue-500/30 rounded-full blur-xl animate-float"></div>
+    <div class="absolute bottom-1/4 right-12 w-32 h-32 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-full blur-xl animate-float" style="animation-delay: -4s;"></div>
+</section>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 -mt-8 relative z-10">
+    <!-- Genres Section -->
+    {% if generos_populares %}
+    <div class="glass-morphism rounded-3xl shadow-2xl p-8 mb-8 border border-white/10 animate-slide-up">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-white flex items-center">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 rounded-xl flex items-center justify-center mr-4 animate-glow">
+                    <i class="bi bi-tags text-white text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-white">Géneros Populares</div>
+                    <div class="text-sm text-gray-400 font-normal">Categorías más buscadas</div>
+                </div>
+            </h2>
+        </div>
+        
+        <!-- Genres Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {% for genero in generos_populares %}
+            <div class="genre-badge glass-morphism rounded-2xl p-4 text-center border border-cyan-400/20 hover:border-cyan-400/50">
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="bi bi-bookmark text-white"></i>
+                </div>
+                <div class="text-white font-semibold text-sm">{{ genero.nombre }}</div>
+                <div class="text-cyan-400 text-xs">{{ genero.num_libros }} libros</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Books Grid -->
+    <div class="glass-morphism rounded-3xl shadow-2xl p-8 border border-white/10 animate-slide-up" style="animation-delay: 0.2s;">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold text-white flex items-center">
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-4 animate-glow">
+                    <i class="bi bi-journal-bookmark text-white text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-white">Catálogo de Libros</div>
+                    <div class="text-sm text-gray-400 font-normal">
+                        {% if object_list %}
+                            {{ object_list|length }} libros {% if request.GET.q %}encontrados{% else %}disponibles{% endif %}
+                        {% else %}
+                            No hay libros disponibles
+                        {% endif %}
+                    </div>
+                </div>
+            </h2>
+            
+            <!-- View Toggle -->
+            <div class="flex items-center space-x-4">
+                <div class="bg-white/10 rounded-xl p-1 flex">
+                    <button class="px-4 py-2 bg-cyan-500 text-white rounded-lg text-sm font-medium">
+                        <i class="bi bi-grid-3x3-gap mr-2"></i>Cuadrícula
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        {% if object_list %}
+        <!-- Books Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for libro in object_list %}
+            <div class="book-card glass-morphism rounded-2xl overflow-hidden border border-white/10 hover:border-cyan-400/30 card-hover" style="animation-delay: {{ forloop.counter0|add:1 }}00ms;">
+                <div class="p-6">
+                    <div class="flex items-start space-x-4 mb-4">
+                        <div class="w-16 h-20 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-book text-white text-2xl"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-white font-semibold text-lg mb-1 line-clamp-2">
+                                <a href="https://www.sev.gob.mx/clasesdesdecasa/documentos/c8cf01c83fcd163f06e727cabcff90ac100-a%C3%B1os-de-soledad-Gabriel-Garc%C3%ADa-Marquez.pdf" target="_blank" class="hover:text-cyan-400 transition duration-300">
+                                    {{ libro.titulo }}
+                                </a>
+                            </h3>
+                            <p class="text-gray-400 text-sm mb-2">
+                                <i class="bi bi-person mr-1"></i>
+                                {{ libro.autor }}
+                            </p>
+                            <div class="flex items-center space-x-2 flex-wrap gap-1">
+                                <i class="bi bi-tags text-white text-xl"></i>
+                                {% if libro.genero %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                    {{ libro.genero.all|join:", " }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <a href="{% url 'libro-detail' libro.id %}" class="mx-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-cyan-600 hover:to-blue-700 transition duration-300 transform hover:scale-105">
+                        Ver Detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-16">
+            <div class="mb-6">
+                <div class="w-24 h-24 bg-gradient-to-br from-gray-400/20 to-gray-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="bi bi-search text-gray-400 text-4xl"></i>
+                </div>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4">No se encontraron libros</h3>
+            <p class="text-gray-400 mb-8 max-w-md mx-auto">
+                {% if request.GET.q %}
+                No hay libros que coincidan con tu búsqueda "<strong class="text-white">{{ request.GET.q }}</strong>"
+                {% else %}
+                Aún no hay libros registrados en el sistema
+                {% endif %}
+            </p>
+            <div class="flex gap-4 justify-center flex-wrap">
+                {% if request.GET.q %}
+                <a href="{% url 'libros' %}" class="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-3 rounded-xl font-medium hover:from-gray-700 hover:to-gray-800 transition duration-300 flex items-center space-x-2">
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Ver todos los libros</span>
+                </a>
+                {% endif %}
+                <button class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:from-cyan-600 hover:to-blue-700 transition duration-300 flex items-center space-x-2">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Agregar libro</span>
+                </button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="glass-morphism rounded-3xl shadow-2xl p-6 mt-8 border border-white/10 animate-slide-up" style="animation-delay: 0.4s;">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <div class="text-gray-400 text-sm">
+                <i class="bi bi-info-circle mr-1"></i>
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                <span class="text-gray-500 mx-2">•</span>
+                {{ page_obj.paginator.count }} libros en total
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                {% if page_obj.has_previous %}
+                <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+                   class="w-10 h-10 bg-white/10 hover:bg-cyan-500/20 rounded-lg flex items-center justify-center text-gray-400 hover:text-cyan-400 transition duration-300">
+                    <i class="bi bi-chevron-double-left"></i>
+                </a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+                   class="w-10 h-10 bg-white/10 hover:bg-cyan-500/20 rounded-lg flex items-center justify-center text-gray-400 hover:text-cyan-400 transition duration-300">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+                {% else %}
+                <div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-gray-600">
+                    <i class="bi bi-chevron-double-left"></i>
+                </div>
+                <div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-gray-600">
+                    <i class="bi bi-chevron-left"></i>
+                </div>
+                {% endif %}
+                
+                <!-- Page Numbers -->
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                    <div class="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-semibold">
+                        {{ num }}
+                    </div>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+                       class="w-10 h-10 bg-white/10 hover:bg-cyan-500/20 rounded-lg flex items-center justify-center text-gray-400 hover:text-cyan-400 transition duration-300">
+                        {{ num }}
+                    </a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+                   class="w-10 h-10 bg-white/10 hover:bg-cyan-500/20 rounded-lg flex items-center justify-center text-gray-400 hover:text-cyan-400 transition duration-300">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+                   class="w-10 h-10 bg-white/10 hover:bg-cyan-500/20 rounded-lg flex items-center justify-center text-gray-400 hover:text-cyan-400 transition duration-300">
+                    <i class="bi bi-chevron-double-right"></i>
+                </a>
+                {% else %}
+                <div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-gray-600">
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+                <div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-gray-600">
+                    <i class="bi bi-chevron-double-right"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</main>
+
+<script>
+// Add staggered animation to book cards
+document.addEventListener('DOMContentLoaded', function() {
+    const bookCards = document.querySelectorAll('.book-card');
+    bookCards.forEach((card, index) => {
+        card.style.animationDelay = `${(index * 0.1)}s`;
+    });
+});
+
+</script>
+{% endblock %}
