@@ -40,6 +40,7 @@ class LibroListView(generic.ListView):
             return Libro.objects.filter(
                 Q(titulo__icontains=query) |
                 Q(autor__nombre__icontains=query) |
+                Q(genero__nombre__icontains=query) |
                 Q(autor__apellido__icontains=query)
             ).select_related('autor')
         # Devolver todos los libros

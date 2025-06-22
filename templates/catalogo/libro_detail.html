@@ -1,3 +1,4 @@
+{% load static %}
 {% block title %}BiblioTech - {{ object.titulo }}{% endblock %}
 {% block extra_css %}
 <script src="https://cdn.tailwindcss.com"></script>
@@ -187,10 +188,9 @@
                 <!-- Logo -->
                 <div class="flex items-center space-x-4 animate-slide-down">
                     <div class="relative">
-                        <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-2xl rotate-3 hover:rotate-0 transition-transform duration-300 animate-glow">
-                            <i class="bi bi-book-half text-white text-xl"></i>
+                        <div>
+                            <img src="{% static 'img/DigitalBooks.jpg' %}" alt="Logo" class="w-20 h-20">
                         </div>
-                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-cyan-400 rounded-full animate-pulse-soft"></div>
                     </div>
                     <div>
                         <span class="text-2xl font-black text-white tracking-tight">BiblioTech</span>
@@ -212,13 +212,6 @@
                             <i class="bi bi-journal-bookmark text-sm"></i>
                         </div>
                         <span>Libros</span>
-                        <div class="absolute -bottom-1 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:w-full transition-all duration-300"></div>
-                    </a>
-                    <a href="#" class="group flex items-center space-x-2 text-gray-300 hover:text-cyan-400 transition duration-300 font-medium relative">
-                        <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center group-hover:bg-cyan-400/20 transition duration-300">
-                            <i class="bi bi-people text-sm"></i>
-                        </div>
-                        <span>Autores</span>
                         <div class="absolute -bottom-1 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:w-full transition-all duration-300"></div>
                     </a>
                 </div>            
@@ -274,7 +267,11 @@
                     <!-- Book Cover -->
                     <div class="text-center mb-8">
                         <div class="w-48 h-64 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
-                            <i class="bi bi-book text-white text-6xl"></i>
+                            {% if object.imagen %}
+                                <img src="{{ object.imagen.url }}" alt="Portada del libro" class="w-64 h-auto" />
+                            {% else %}
+                                <p>No hay imagen disponible</p>
+                            {% endif %}
                         </div>
                         
                         <!-- Status Badge -->
@@ -368,7 +365,7 @@
                         </div>
                         
                         <!-- Genres -->
-                        <div class="glass-morphism rounded-2xl p-6 border border-white/10 md:col-span-2">
+                        <div class="glass-morphism rounded-2xl p-6 border border-white/10">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center mr-3">
                                     <i class="bi bi-tags text-white"></i>
@@ -386,6 +383,19 @@
                                 </span>
                                 {% endfor %}
                             </div>
+                        </div>
+                        <!-- Link -->
+                        <div class="glass-morphism rounded-2xl p-6 border border-white/10">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-600 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="bi bi-translate text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-semibold">Link</h3>
+                                    <p class="text-gray-400 text-sm">Link del Libro</p>
+                                </div>
+                            </div>
+                            <a href="{{ object.enlace }}" class="text-cyan-400 hover:underline">Leer Libro</a>
                         </div>
                     </div>
                 </div>

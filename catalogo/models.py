@@ -25,7 +25,7 @@ class Autor(models.Model):
         return reverse('autor-detail', args=[str(self.id)])
     
     def __str__(self):
-        return f"{self.apellido}, {self.nombre}"
+        return f"{self.nombre} {self.apellido}"
     
 class Libro(models.Model):
     """Modelo que representa un libro (pero no un ejemplar específico)."""
@@ -35,7 +35,9 @@ class Libro(models.Model):
     isbn = models.CharField('ISBN', max_length=13, unique=True, help_text='13 Caracteres ISBN')
     genero = models.ManyToManyField(Genero, help_text="Seleccione un género para este libro")
     idioma = models.CharField(max_length=20, default='Español')
-    
+    enlace = models.URLField(max_length=200, blank=True, help_text="Enlace a más información sobre el libro")
+    imagen = models.ImageField(upload_to='libros/', blank=True, null=True, help_text="Suba una imagen de la portada del libro")
+
     class Meta:
         ordering = ['titulo']
         indexes = [
