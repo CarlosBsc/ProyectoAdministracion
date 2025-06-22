@@ -1,5 +1,4 @@
 {% load static %}
-{% block title %}BiblioTech - Catálogo de Libros{% endblock %}
 {% block extra_css %}
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -209,7 +208,7 @@
                 <div class="flex items-center space-x-4 animate-slide-down">
                     <div class="relative">
                         <div>
-                            <img src="{% static 'img/DigitalBooks.jpg' %}" alt="Logo" class="w-20 h-20">
+                            <img src="{% static 'img/DigitalBooks.jpg' %}" alt="Logo" class="w-20 h-20 rounded-2xl">
                         </div>
                     </div>
                     <div>
@@ -378,7 +377,7 @@
                     <div class="flex items-start space-x-4 mb-4">
                         <div class="w-16 h-20 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
                             {% if libro.imagen %}
-                                <img src="{{ libro.imagen.url }}" alt="Portada del libro" class="w-64 h-auto" />
+                                <img src="{{ libro.imagen.url }}" alt="Portada del libro" class="w-auto h-auto rounded-2xl" />
                             {% else %}
                                 <p>Sin imangen</p>
                             {% endif %}

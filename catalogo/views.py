@@ -31,7 +31,7 @@ def index(request):
 
 class LibroListView(generic.ListView):
     model = Libro
-    paginate_by = 10
+    paginate_by = 8
     
     def get_queryset(self):
         # Filtrar por términos de búsqueda si hay alguno

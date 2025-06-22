@@ -1,5 +1,4 @@
 {% load static %}
-{% block title %}BiblioTech - {{ object.titulo }}{% endblock %}
 {% block extra_css %}
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -189,7 +188,7 @@
                 <div class="flex items-center space-x-4 animate-slide-down">
                     <div class="relative">
                         <div>
-                            <img src="{% static 'img/DigitalBooks.jpg' %}" alt="Logo" class="w-20 h-20">
+                            <img src="{% static 'img/DigitalBooks.jpg' %}" alt="Logo" class="w-20 h-20 rounded-2xl">
                         </div>
                     </div>
                     <div>
@@ -268,7 +267,7 @@
                     <div class="text-center mb-8">
                         <div class="w-48 h-64 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
                             {% if object.imagen %}
-                                <img src="{{ object.imagen.url }}" alt="Portada del libro" class="w-64 h-auto" />
+                                <img src="{{ object.imagen.url }}" alt="Portada del libro" class="w-64 h-auto rounded-2xl" />
                             {% else %}
                                 <p>No hay imagen disponible</p>
                             {% endif %}
@@ -306,21 +305,21 @@
                 <!-- Book Summary - CAMBIADO -->
                 <div class="glass-morphism rounded-3xl shadow-2xl p-8 border border-white/10 animate-slide-up" style="animation-delay: 0.2s;">
                     <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-4 animate-glow">
-                            <i class="bi bi-book-half text-white text-2xl"></i>
-                        </div>
-                        <!-- Book Title -->
-                    <div class="mb-8">
+                    </div>
+                    <!-- Book Summary -->
+                     <div class="mb-8">
                         <h1 class="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
                             {{ object.titulo }}
                         </h1>
                         <div class="flex items-center space-x-4 text-lg">
-                            <span class="text-black font-bold">Autor:</span>
-                            <span class="text-white font-bold">{{ object.autor }}</span>
+                            <i class="bi bi-person text-gray-400"> Autor: {{ object.autor }}</i>
+                            
                         </div>
                     </div>
-                    </div>
-                    <p class="text-gray-300 leading-relaxed text-lg">{{ object.resumen }}</p>
+                    <p class="text-gray-300 leading-relaxed text-lg mb-4">
+                        <i class="bi bi-file-earmark-text text-gray-400 ml-1"> Resumen :<br>
+                            {{ object.resumen|default:"No hay resumen disponible para este libro." }}</i>
+                    </p>
                 </div>
                 
                 <!-- Book Details -->
@@ -377,7 +376,7 @@
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 {% for g in object.genero.all %}
-                                <span class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-400 border border-purple-500/30">
+                                <span class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white border border-purple-500/30">
                                     <i class="bi bi-bookmark mr-1 "></i>
                                     {{ g.nombre }}
                                 </span>
@@ -387,15 +386,15 @@
                         <!-- Link -->
                         <div class="glass-morphism rounded-2xl p-6 border border-white/10">
                             <div class="flex items-center mb-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-600 rounded-lg flex items-center justify-center mr-3">
-                                    <i class="bi bi-translate text-white"></i>
+                                <div class="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="bi bi-link text-white"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-white font-semibold">Link</h3>
-                                    <p class="text-gray-400 text-sm">Link del Libro</p>
+                                    <h3 class="text-white font-semibold">Enalce</h3>
+                                    <p class="text-gray-400 text-sm ">Link para acceder al libro</p>
                                 </div>
                             </div>
-                            <a href="{{ object.enlace }}" class="text-cyan-400 hover:underline">Leer Libro</a>
+                            <a href="{{ object.enlace }}" class="text-cyan-500 hover:underline font-bold">Leer Libro</a>
                         </div>
                     </div>
                 </div>
@@ -414,47 +413,49 @@
                 </div>
             </div>
             
-            {% for libro in libros_relacionados %}
+            <!-- Contenedor del grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <div class="glass-morphism rounded-2xl overflow-hidden border border-white/10 hover:border-cyan-400/30 card-hover">
-                    <div class="p-6">
-                        <div class="flex items-start space-x-4 mb-4">
-                            <div class="w-16 h-20 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i class="bi bi-book text-white text-2xl"></i>
+                {% for libro in libros_relacionados %}
+                    <div class="glass-morphism rounded-2xl overflow-hidden border border-white/10 hover:border-cyan-400/30 card-hover">
+                        <div class="p-6">
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="w-16 h-20 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    {% if libro.imagen %}
+                                        <img src="{{ libro.imagen.url }}" alt="Portada del libro" class="w-16 h-20 object-cover rounded-xl" />
+                                    {% else %}
+                                        <p class="text-white text-xs">Sin imagen</p>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-white font-semibold text-lg mb-1">
+                                        <a href="{% url 'libro-detail' libro.id %}" class="hover:text-cyan-400 transition duration-300">
+                                            {{ libro.titulo }}
+                                        </a>
+                                    </h3>
+                                    <p class="text-gray-400 text-sm flex items-center">
+                                        <i class="bi bi-person mr-1"></i> {{ libro.autor }}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="flex-1 min-w-0">
-                                <h3 class="text-white font-semibold text-lg mb-1">
-                                    <a href="{% url 'libro-detail' libro.id %}" class="hover:text-cyan-400 transition duration-300">
-                                        {{ libro.titulo }}
-                                    </a>
-                                </h3>
-                                <p class="text-gray-400 text-sm">
-                                    <i class="bi bi-person mr-1"></i>
-                                    {{ libro.autor }}
-                                </p>
+                            <div class="flex items-center justify-between">
+                                <a href="{% url 'libro-detail' libro.id %}"
+                                class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-cyan-600 hover:to-blue-700 transition duration-300 transform hover:scale-105">
+                                    Ver Detalles
+                                </a>
                             </div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="text-gray-400 text-sm">
-                                <i class="bi bi-bookmark mr-1"></i>
-                                Relacionado
-                            </div>
-                            <a href="{% url 'libro-detail' libro.id %}" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-cyan-600 hover:to-blue-700 transition duration-300 transform hover:scale-105">
-                                Ver Detalles
-                            </a>
                         </div>
                     </div>
-                </div>
+                {% empty %}
+                    <!-- Mensaje si no hay libros -->
+                    <div class="col-span-full text-center py-12">
+                        <div class="w-16 h-16 bg-gradient-to-br from-gray-400/20 to-gray-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="bi bi-collection text-gray-400 text-2xl"></i>
+                        </div>
+                        <p class="text-gray-400 text-lg">No hay libros relacionados.</p>
+                        <p class="text-gray-500 text-sm mt-2">Pronto agregaremos más libros similares.</p>
+                    </div>
+                {% endfor %}
             </div>
-            {% empty %}
-            <div class="text-center py-12">
-                <div class="w-16 h-16 bg-gradient-to-br from-gray-400/20 to-gray-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="bi bi-collection text-gray-400 text-2xl"></i>
-                </div>
-                <p class="text-gray-400 text-lg">No hay libros relacionados.</p>
-                <p class="text-gray-500 text-sm mt-2">Pronto agregaremos más libros similares</p>
-            </div>
-            {% endfor %}
         </div>
     </main>
 
